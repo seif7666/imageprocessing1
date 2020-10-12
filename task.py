@@ -84,33 +84,16 @@ def my_bgr2gray(image):
     return im
 
 def normalize_img(image):
-
-    shape = np.shape(image)
-    total = shape[0]*shape[1] #Total number units
-    colors=np.zeros(3)
-    for i in image:
-        for j in i:
-            colors+=j#Add colors
-            
-    #Now we get mean
-    colors/=total#We have mean in colors array
-    #Now the std
-    #std**2=sigma(x-mean)**2
-    std = np.zeros(3)
-    for i in image:
-        for j in i:
-            std += (j-colors)**2
-    std = std**0.5 #Square root to get the standard deviation
-    
-    #Now we begin the normalization
-    normal = image.copy()
-    for i in range (shape[0]):
-        for j in  range (shape[1]):
-            normal[i,j,0] = (normal[i,j,0]-colors[0])//std[0]       
-            normal[i,j,1] = (normal[i,j,1]-colors[1])//std[1] 
-            normal[i,j,2] = (normal[i,j,2]-colors[2])//std[2]       
-
+    means=np.zeros(3)
+    stds = np.zeros(3)
+    for c in range(3):
+        means[c] = np.mean(image[:,:,c])
+        stds[c]=np.std(image[:,:,c])
+    normal =image.copy()
+    normal = (image - means)/stds
     return normal
+            
+            
             
 
 
